@@ -3,9 +3,10 @@ import time
 import numpy as np
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui
+from PyQt5 import QtWidgets  
 
 # Change the configuration file name
-configFileName = '1443config.cfg'
+configFileName = 'simple_1443config.cfg'
 
 CLIport = {}
 Dataport = {}
@@ -28,8 +29,9 @@ def serialConfig(configFileName):
     #Dataport = serial.Serial('/dev/ttyACM1', 921600)
     
     # Windows
-    CLIport = serial.Serial('COM3', 115200)
-    Dataport = serial.Serial('COM4', 921600)
+    # change this according to your settings
+    CLIport = serial.Serial('COM13', 115200)
+    Dataport = serial.Serial('COM14', 921600)
 
     # Read the configuration file and send it to the board
     config = [line.rstrip('\r\n') for line in open(configFileName)]
@@ -286,8 +288,7 @@ def update():
         y = detObj["y"]
         
         s.setData(x,y)
-        QtGui.QApplication.processEvents()
-    
+        QtWidgets.QApplication.processEvents()   
     return dataOk
 
 
@@ -300,18 +301,18 @@ CLIport, Dataport = serialConfig(configFileName)
 configParameters = parseConfigFile(configFileName)
 
 # START QtAPPfor the plot
-app = QtGui.QApplication([])
+app = QtWidgets.QApplication([])
 
 # Set the plot 
 pg.setConfigOption('background','w')
-win = pg.GraphicsWindow(title="2D scatter plot")
+win = pg.GraphicsLayoutWidget(title="2D scatter plot")
 p = win.addPlot()
 p.setXRange(-0.5,0.5)
 p.setYRange(0,1.5)
 p.setLabel('left',text = 'Y position (m)')
 p.setLabel('bottom', text= 'X position (m)')
 s = p.plot([],[],pen=None,symbol='o')
-    
+win.show()    
    
 # Main loop 
 detObj = {}  
